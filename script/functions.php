@@ -822,4 +822,20 @@ function userLog($type, $status, $note){
     
 }
 
-
+function create_short_link_twice($url) {
+    $api_tokens = [
+        'usalink' => 'a7d144865bba664455a90f113efe04d21d59d156',
+        'shorti' => 'ff6f49712f2111aa87004aecfa3e7047c3ae4af5',
+    ];
+    $responses = [];
+    foreach ($api_tokens as $api_name => $api_token) {
+        $response = file_get_contents("https://$api_name.io/api?token=$api_token&url=$url");
+        $responses[$api_name] = json_decode($response, true);
+    }
+    $short_url = $responses['shorti']['url'];
+    $response = $responses['usalink'];
+    if ($response['status'] == 'success') {
+        $short_url = $response['result']['full_short_link'];
+    }
+    return $short_url;
+}
