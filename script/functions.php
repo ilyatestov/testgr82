@@ -18,6 +18,10 @@
  *
  */
 
+
+function create_short_link($url, $api_token) {
+  // Код функции здесь
+
 function get_usalink_short_link($url, $token) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://usalink.io/api/v1/links");
