@@ -1,36 +1,29 @@
 <?php
+
+/*
+ * GR8 Faucet Script Lite
+ * https://gr8.cc 
+ * 
+ * Copyright 2019 GR8 Scripts, AvalonRychmon
+ * 
+ * GR8 Faucet Script Lite is free bare bones version of the GR8 Faucet Script.
+ * It was released so that anyone interested in operating a cryptocurrecy faucet
+ * would have an equal opportunity regardless of their financial position or
+ * personal knowledge of coding. 
+ *
+ * If you need assistance with this script, then please join us on Discord at
+ * https://gr8.cc/discord
+ * 
+ * I personally wish you great success on your journey! -AvalonRychmon
+ *
+ */
     
 ## Functions version
 $fv = '3';
+
 ## Captchas
 $captchas = array('solvemedia' => 'SolveMedia', 'recaptcha' => 'reCaptcha');
-function getShortUrl($url) {
-    global $settings;
-    $sl_data = $settings['sldata']['10001']; // получаем настройки для usalink.io
-    $sl_url = $sl_data['apilink'];
-    $sl_url = str_replace('{apikey}', $sl_data['apikey'], $sl_url);
-    $sl_url = str_replace('{url}', urlencode($url), $sl_url);
-    // Отправляем запрос на usalink.io и получаем короткую ссылку
-    $response = file_get_contents($sl_url);
-    $short_url = $response ? trim($response) : '';
-    // Если короткая ссылка не была получена, вернем оригинальную ссылку
-    if (empty($short_url)) {
-        return $url;
-    }
-    $sl_data2 = $settings['sldata']['10002']; // получаем настройки для shorti.io
-    $sl_url2 = $sl_data2['apilink'];
-    $sl_url2 = str_replace('{apikey}', $sl_data2['apikey'], $sl_url2);
-    $sl_url2 = str_replace('{url}', urlencode($short_url), $sl_url2);
-    // Отправляем запрос на shorti.io и получаем вторую короткую ссылку
-    $response2 = file_get_contents($sl_url2);
-    $short_url2 = $response2 ? trim($response2) : '';
-    // Если вторая короткая ссылка не была получена, вернем оригинальную ссылку
-    if (empty($short_url2)) {
-        return $url;
-    }
-    // Возвращаем двойную короткую ссылку
-    return $short_url2;
-}
+
 ## Get Faucet Settings
 function getSettings($update=''){
 	 
@@ -61,35 +54,10 @@ function getSettings($update=''){
     } catch(Exception $e) {
         error_log($e->getMessage()); 
     }
+
 	return $settings;
 }
-function create_double_short_link($url, $name) {
-    global $settings;
-    $url = trim($url);
-    $name = trim($name);
-    // Generate first short link
-    $short_url = generate_short_link($url);
-    if (!$short_url) {
-        return false;
-    }
-    // Generate second short link
-    $short_url_2 = generate_short_link($short_url);
-    if (!$short_url_2) {
-        return false;
-    }
-    // Add custom short link
-    $custom_id = count($settings['sldata']) + 1;
-    $settings['sldata'][$custom_id] = array(
-        'id' => $custom_id,
-        'name' => $name,
-        'apilink' => $short_url_2,
-        'views' => 0,
-        'cpm' => 0,
-        'referral' => '',
-        'status' => 'Y'
-    );
-    return $short_url_2;
-}
+
 ## Get Shortlink List
 function getShortlinks(){
 	
@@ -105,6 +73,7 @@ function getShortlinks(){
 	}
 	return $sldata;
 }
+
 ## Get Currency USD Rate
 function getRate($value, $usd=''){
 	
@@ -118,6 +87,7 @@ function getRate($value, $usd=''){
 	   default:
 	       $currency = strtolower(str_replace(' ','-',$currencies[$settings['currency']]));
 	}
+
     // Get Cached Rate
     $rate = $cache->get($currency.'-rate');
     
@@ -147,6 +117,7 @@ function getRate($value, $usd=''){
     
     return $rate;
 }
+
 ## Get Rewards
 function getReward($rewards, $list=''){
     
@@ -168,10 +139,12 @@ function getReward($rewards, $list=''){
 				if(strlen($v) >= '7'){
 					$rlist[] = ($v/100000000).' ('.$k.'%)';
 					$abrv = 'true';
+
 				} else {
 					$rlist[] = $v.' ('.$k.'%)';
 				}
 			}
+
 			$list = implode(', ',$rlist);
 			if($abrv == 'true'){
 				return 'Claim '.$list.' '.$settings['currency'].' every '.(($settings['timer'] > '1')? $settings['timer'].' minutes' : 'minute'); 
@@ -190,6 +163,7 @@ function getReward($rewards, $list=''){
     		return $reward;
 	    }
 	}	
+
 	// Random Min - Max Reward
 	elseif(stristr($rewards, '-')){
 		$r = explode('-', trim($rewards));
@@ -231,6 +205,7 @@ function getReward($rewards, $list=''){
 		    return $reward['value'];
 		}		
 	}
+
 	// Single satoshi reward
 	else {
 		$reward = floatval($rewards);
@@ -248,6 +223,7 @@ function getReward($rewards, $list=''){
 		}
 	}
 }
+
 ## Get Captcha
 function getCaptcha($captcha){
 	
@@ -267,6 +243,7 @@ function getCaptcha($captcha){
 	} 
 	return $captcha;
 }
+
 ## Check AntiBot
 function checkAntibot(){
 	global $faucetID, $settings, $_POST, $_SESSION;
@@ -285,6 +262,7 @@ function checkAntibot(){
 	unset($_SESSION[$faucetID]['antibotlinks']);
 	return true;
 }
+
 ## Check Captcha
 function checkCaptcha(){
     
@@ -312,6 +290,7 @@ function checkCaptcha(){
 	
    return true;
 }	
+
 ## Check Microwallet User/Address   
 function checkAddress(&$message = null) {
        
@@ -406,6 +385,7 @@ function checkAddress(&$message = null) {
     
     
 }
+
 ## Check LastClaim
 function checkLastClaim(&$mins = null){
     
@@ -430,6 +410,7 @@ function checkLastClaim(&$mins = null){
     }
     return true;
 }
+
 ## Check Max Claims
 function checkMaxClaims(){
 	
@@ -463,6 +444,7 @@ function checkMaxClaims(){
 	}
 	return true;
 }
+
 ## Check Session
 function checkSession() {
     
@@ -474,6 +456,7 @@ function checkSession() {
 	}
 	return true;
 }
+
 ## Get Shortlink
 function getShortlink(){
 	
@@ -584,6 +567,7 @@ function getShortlink(){
 		return;
 	}
 }
+
 ## Check Shortlink
 function checkShortlink(){
     
@@ -644,6 +628,7 @@ function checkShortlink(){
     }
     return true;
 }
+
 ## Send Microwallet Payout  
 function send($to, $amount, $referral = false, $currency = '') {
        
@@ -707,6 +692,7 @@ function send($to, $amount, $referral = false, $currency = '') {
     
     return $response;
 }
+
 ## Send User Payout
 function sendPayout(&$message = null){
     
@@ -741,6 +727,7 @@ function sendPayout(&$message = null){
 	    }
 		// Insert payout data
 		$db->query("INSERT INTO `payouts-".$faucetID."` VALUES (null, '".$address."', '".getIP()."', '".$amount."', '".((strstr($settings['reward'],'.'))? number_format($settings['reward'],5): getRate($amount,'usd')['usd'])."', '".$settings['currency']."', 'claim', '".$_SESSION[$faucetID]['shortlink']['token']."', '".$_SESSION[$faucetID]['shortlink']['id']."', '".$_SESSION[$faucetID]['shortlink']['link']."', '".$_SESSION[$faucetID]['ip_check'][getIP()]['data']['asn']."', '".$_SESSION[$faucetID]['ip_check'][getIP()]['data']['countryCode']."', '".$_SESSION[$faucetID]['ip_check'][getIP()]['data']['os']."', '".$_SESSION[$faucetID]['ip_check'][getIP()]['data']['device']."', '".$_SESSION[$faucetID]['ip_check'][getIP()]['data']['browser']."', '".addslashes($_SERVER['HTTP_USER_AGENT'])."', '".addslashes($_SERVER['HTTP_REFERER'])."', '".json_encode($sendPayout)."', '".dateNow()."')");
+
 		userLog('action',$sendPayout['status'], 'Paid '.$amount.' satoshi '.(($_SESSION[$faucetID]['shortlink']['link']) ?: '').(($_SESSION[$faucetID]['ref']) ? '['.$_SESSION[$faucetID]['ref'].']' : '').' Shorttime: '.(time() - $_SESSION[$faucetID]['shortlink']['time']).' sec');
 		
 	    ## PAY REF
@@ -760,6 +747,7 @@ function sendPayout(&$message = null){
 	return $sendPayout;
 } 
  
+
 // Send Ref Payout
 function sendRefPayout($ref, $amount){
 	
@@ -821,6 +809,7 @@ function sendRefPayout($ref, $amount){
 	}	
 	return $sendPayout;
 }
+
 // Create Log files
 function userLog($type, $status, $note){
     
@@ -832,3 +821,5 @@ function userLog($type, $status, $note){
     $db->query("DELETE FROM `logs-".$faucetID."` WHERE `timestamp` < (NOW() - INTERVAL 30 DAY)");
     
 }
+
+
