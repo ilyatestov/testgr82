@@ -4,6 +4,7 @@
 
 ## Initiate Script Requirements
 include '../script/ini.php';
+require_once 'functions.php';
 
 ## Login
 if($_POST['password']){ 
