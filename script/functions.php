@@ -1,35 +1,5 @@
 <?php
 
-// Функция создания короткой ссылки
-function short_link($url) {
-// Функция создания короткой ссылки
-function short_link($url) {
-    // Получение настроек сервиса usalink.io
-    global $settings;
-    $sl_settings = $settings['sldata']['10001'];
-
-    // Формирование ссылки для запроса API
-    $api_url = str_replace('{apikey}', $sl_settings['apikey'], $sl_settings['apilink']);
-    $api_url = str_replace('{url}', urlencode($url), $api_url);
-
-    // Запрос API для получения короткой ссылки
-    $response = file_get_contents($api_url);
-    $short_url = json_decode($response, true)['short'];
-
-    // Создание короткой ссылки со вторым сервисом
-    $api_key = $settings['apikeys']['shorti'];
-    $second_url = "https://shorti.io/api?api=$api_key&url=$short_url";
-    $response = file_get_contents($second_url);
-    $short_url = json_decode($response, true)['short'];
-
-    return $short_url;
-}
-
-}
-
-
-
-
 /*
  * GR8 Faucet Script Lite
  * https://gr8.cc 
