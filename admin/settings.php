@@ -4,7 +4,6 @@
 
 ## Initiate Script Requirements
 include '../script/ini.php';
-require_once 'functions.php';
 
 ## Login
 if($_POST['password']){ 
@@ -445,25 +444,7 @@ include '../script/shortlinks.php';
                                         </div>
                                     </form>
                                  </div> <!-- ./ tab-pane -->
-
-				    
-<h3>Add custom shortlink</h3>
-<form method="post" action="settings.php">
-    <input type="hidden" name="action" value="add_custom_shortlink">
-    <label for="shortlink_name">Shortlink name:</label>
-    <input type="text" id="shortlink_name" name="shortlink_name" required><br><br>
-    <label for="shortlink_url">Shortlink URL:</label>
-    <input type="text" id="shortlink_url" name="shortlink_url" required><br><br>
-    <button type="submit">Add Shortlink</button>
-</form>
-
-<!-- existing shortlinks table -->
-<table>
-    <!-- table rows for existing shortlinks -->
-</table>
-				    
-				    
-				    
+                                
                                 <!-- Shortlinks -->
                                 <div class="tab-pane fade<?= ((($_POST['tab'] == 'shortlinks'))? ' show active' : '');?>" id="shortlinks" role="tabpanel" aria-labelledby="shortlinks-tab">
                                     <form action="" class="form" method="post" id="shortlinksForm">
