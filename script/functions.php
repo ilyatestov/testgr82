@@ -58,39 +58,6 @@ function getSettings($update=''){
 	return $settings;
 }
 
-function create_double_short_link($url, $name) {
-    global $settings;
-    $url = trim($url);
-    $name = trim($name);
-
-    // Generate first short link
-    $short_url = generate_short_link($url);
-    if (!$short_url) {
-        return false;
-    }
-
-    // Generate second short link
-    $short_url_2 = generate_short_link($short_url);
-    if (!$short_url_2) {
-        return false;
-    }
-
-    // Add custom short link
-    $custom_id = count($settings['sldata']) + 1;
-    $settings['sldata'][$custom_id] = array(
-        'id' => $custom_id,
-        'name' => $name,
-        'apilink' => $short_url_2,
-        'views' => 0,
-        'cpm' => 0,
-        'referral' => '',
-        'status' => 'Y'
-    );
-
-    return $short_url_2;
-}
-
-
 ## Get Shortlink List
 function getShortlinks(){
 	
