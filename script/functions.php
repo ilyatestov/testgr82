@@ -17,68 +17,7 @@
  * I personally wish you great success on your journey! -AvalonRychmon
  *
  */
-
-
-function create_short_link($url, $api_token) {
-  // Код функции здесь
-
-function get_usalink_short_link($url, $token) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://usalink.io/api/v1/links");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"url\":\"$url\"}");
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json", "Authorization: Bearer $token"));
-    $result = curl_exec($ch);
-    curl_close($ch);
-    $result = json_decode($result, true);
-    if(isset($result['short'])) {
-        return $result['short'];
-    }
-    return false;
-}
-
-function get_shorti_short_link($url, $token) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://api.shorti.io/links");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"url\":\"$url\"}");
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json", "Authorization: Bearer $token"));
-    $result = curl_exec($ch);
-    curl_close($ch);
-    $result = json_decode($result, true);
-    if(isset($result['short_link'])) {
-        return $result['short_link'];
-    }
-    return false;
-}
-
-function create_short_link($long_url, $api_token) {
-  $curl = curl_init();
-  curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://usalink.io/api/v1/links?apikey=' . $api_token,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => json_encode(array(
-      'url' => $long_url
-    )),
-    CURLOPT_HTTPHEADER => array(
-      'Content-Type: application/json'
-    )
-  ));
-  $response = curl_exec($curl);
-  $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-  curl_close($curl);
-  if ($http_status == 201) {
-    $json_response = json_decode($response, true);
-    return $json_response['link']['short'];
-  } else {
-    return false;
-  }
-}
-
-
+    
 ## Functions version
 $fv = '3';
 
