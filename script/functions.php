@@ -822,4 +822,56 @@ function userLog($type, $status, $note){
     
 }
 
+function short_link($url, $apikey) {
+    $sldata = array(
+        '10000' => array(
+            'id' => '10000',
+            'name' => 'Shorti API',
+            'apilink' => 'https://api.shorti.io/api?api={apikey}&url={url}',
+            'views' => '1',
+            'cpm' => '21.00',
+            'referral' => 'https://example.com',
+            'status' => 'Y'
+        ),
+        '10001' => array(
+            'id' => '10001',
+            'name' => 'USAlink.io',
+            'apilink' => 'https://usalink.io/api?api={apikey}&url={url}',
+            'views' => '1',
+            'cpm' => '21.00',
+            'referral' => 'https://example.com',
+            'status' => 'N'
+        )
+    );
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://api.shorti.io/api?api={$apikey}&url={$url}");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    $data = json_decode($result, true);
+
+    if ($data['status'] == 'success') {
+        $shorturl = $data['shortenedUrl'];
+        $apiid = $data['apiId'];
+
+        foreach ($sldata as $slink) {
+            if ($slink['id'] == $apiid) {
+                $apilink = $slink['apilink'];
+                break;
+            }
+        }
+
+        $ch2 = curl_init();
+        curl_setopt($ch2, CURLOPT_URL, str_replace('{url}', urlencode($shorturl), str_replace('{apikey}', $apikey, $apilink)));
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+        $result2 = curl_exec($ch2);
+        curl_close($ch2);
+
+        return $shorturl;
+    } else {
+        return false;
+    }
+}
 
